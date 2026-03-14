@@ -17,6 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 
   <style>
     /* ── DESIGN TOKENS ── */
@@ -436,6 +437,129 @@
       .grid { grid-template-columns: 1fr; }
       .hero h1 { letter-spacing: -.025em; }
     }
+
+    /* ── MAP SECTION ── */
+    .map-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 12px 8px;
+    }
+    #map {
+      width: 100%;
+      height: 520px;
+      border-radius: var(--r-card);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      background: var(--surface);
+    }
+    @media (max-width: 600px) {
+      #map { height: 420px; }
+    }
+
+    /* Map filter pills — same row as section header */
+    .map-filters {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .map-filter-btn {
+      height: 32px;
+      padding: 0 14px;
+      border-radius: var(--r-btn);
+      border: 1px solid var(--border-2);
+      background: var(--surface-2);
+      color: var(--text-secondary);
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: background .15s, color .15s;
+      letter-spacing: .01em;
+    }
+    .map-filter-btn.active { color: var(--bg); }
+    .map-filter-btn[data-cat="all"].active  { background: var(--text-primary); border-color: var(--text-primary); }
+    .map-filter-btn[data-cat="hike"].active   { background: var(--green);  border-color: var(--green); }
+    .map-filter-btn[data-cat="coffee"].active { background: var(--brown);  border-color: var(--brown); }
+    .map-filter-btn[data-cat="kenji"].active  { background: var(--orange); border-color: var(--orange); }
+    .map-filter-btn[data-cat="sight"].active  { background: var(--blue);   border-color: var(--blue); }
+
+    /* Leaflet popup override to match dark theme */
+    .leaflet-popup-content-wrapper {
+      background: var(--surface-2) !important;
+      border: 1px solid var(--border-2) !important;
+      border-radius: 14px !important;
+      box-shadow: 0 8px 32px rgba(0,0,0,.6) !important;
+      color: var(--text-primary) !important;
+      font-family: var(--font) !important;
+      padding: 0 !important;
+    }
+    .leaflet-popup-tip { background: var(--surface-2) !important; }
+    .leaflet-popup-content { margin: 0 !important; width: auto !important; }
+    .leaflet-container { background: #111 !important; }
+    .leaflet-control-zoom a {
+      background: var(--surface-2) !important;
+      color: var(--text-primary) !important;
+      border-color: var(--border-2) !important;
+    }
+    .leaflet-control-attribution {
+      background: rgba(0,0,0,.5) !important;
+      color: var(--text-tertiary) !important;
+    }
+    .leaflet-control-attribution a { color: var(--text-tertiary) !important; }
+
+    /* Custom popup card */
+    .pop {
+      min-width: 200px;
+      max-width: 260px;
+      padding: 14px 16px;
+    }
+    .pop-cat {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .pop-cat.hike   { color: var(--green); }
+    .pop-cat.coffee { color: var(--brown); }
+    .pop-cat.kenji  { color: var(--orange); }
+    .pop-cat.sight  { color: var(--blue); }
+    .pop-name {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -.01em;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+    .pop-loc {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-bottom: 8px;
+    }
+    .pop-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+    .pop-link {
+      display: inline-flex;
+      align-items: center;
+      height: 30px;
+      padding: 0 12px;
+      border-radius: var(--r-btn);
+      background: rgba(41,151,255,.18);
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .pop-link:active { background: rgba(41,151,255,.3); }
   </style>
 </head>
 <body>
@@ -882,6 +1006,19 @@
     </div>
   </article>
 
+  <article class="card cat-sight" data-cat="sight">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">UW Cherry Blossoms</h2><span class="card-badge">🌆 Sight</span></div>
+      <p class="card-location">📍 UW Campus · The Quad, NE 40th St entrance</p>
+      <p class="card-desc">29 Yoshino cherry trees arch over the UW Quad in a pink canopy that draws thousands every spring. Peak bloom for 2026 was predicted around March 20 — meaning late March is right in the optimal viewing window. Free to visit. Crowds are real: go early morning on a weekday, or just after sunrise on a weekend. Take the Link light rail to avoid parking chaos. Check <strong>washington.edu/cherryblossoms</strong> for live bloom status and webcam before you go.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag bloom">🌸 Peak late March</span><span class="tag">Free</span><span class="tag">Link accessible</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=UW+Quad+Cherry+Blossoms+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
 </main>
 
 <!-- COMBOS -->
@@ -894,7 +1031,7 @@
     <h3>Ideas for your free time</h3>
     <div class="combo-list">
       <div class="combo"><span class="combo-arrow">→</span><span><strong>West Seattle Day:</strong> QED Coffee → Lincoln Park coastal trail → Loretta's Northwesterner for lunch. All in one neighborhood.</span></div>
-      <div class="combo"><span class="combo-arrow">→</span><span><strong>In-City Nature:</strong> Arboretum walk (spring blooms!) + Japanese Garden → Seward Park loop by Lake Washington → 14 Carrot for brunch if you time it right.</span></div>
+      <div class="combo"><span class="combo-arrow">→</span><span><strong>In-City Nature:</strong> UW Cherry Blossoms early morning → Arboretum walk + Japanese Garden → Seward Park loop by Lake Washington → 14 Carrot for brunch.</span></div>
       <div class="combo"><span class="combo-arrow">→</span><span><strong>Waterfall + BBQ:</strong> Morning drive to Twin Falls → lunch at Buckshot Honey in Snoqualmie on the way home.</span></div>
       <div class="combo"><span class="combo-arrow">→</span><span><strong>Capitol Hill Morning:</strong> Temple Pastries → Espresso Vivace or Ghost Note → Aviv for lunch.</span></div>
       <div class="combo"><span class="combo-arrow">→</span><span><strong>Ferry Adventure:</strong> Downtown ferry to Bainbridge Island (35 min, skyline views both ways) → lunch at Proper Fish → ferry back. A perfect half-day.</span></div>
@@ -903,7 +1040,22 @@
   </div>
 </section>
 
-<footer>
+<section class="map-section">
+  <div class="section-header">
+    <h2>Everything on a map</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="map-filters">
+    <button class="map-filter-btn active" data-cat="all">🗺 All</button>
+    <button class="map-filter-btn" data-cat="hike">🥾 Hikes</button>
+    <button class="map-filter-btn" data-cat="coffee">☕ Coffee</button>
+    <button class="map-filter-btn" data-cat="kenji">🍽️ Kenji</button>
+    <button class="map-filter-btn" data-cat="sight">🌆 Sights</button>
+  </div>
+  <div id="map"></div>
+</section>
+
+
   Made for <strong>Teera's late March Seattle weekend</strong> &nbsp;·&nbsp; Food picks by <strong>J. Kenji López-Alt</strong> &nbsp;·&nbsp; All hikes confirmed March-safe
 </footer>
 
@@ -930,6 +1082,146 @@
   });
 
   updateCount('all');
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// ── ALL PLACES ──────────────────────────────────────────────────────────────
+const PLACES = [
+  // HIKES
+  { cat:'hike', name:'Discovery Park Loop',         loc:'Magnolia, Seattle',              lat:47.6613, lng:-122.4171, desc:'Forest trails to a lighthouse and pebble beach on Puget Sound. Multiple loops, 2–5 miles.', maps:'https://maps.apple.com/?q=Discovery+Park+Seattle' },
+  { cat:'hike', name:'Lincoln Park',                loc:'West Seattle',                   lat:47.5306, lng:-122.3960, desc:'5 miles of forested trails with coastal views of the Olympics and Puget Sound. Free parking.', maps:'https://maps.apple.com/?q=Lincoln+Park+West+Seattle' },
+  { cat:'hike', name:'Seward Park',                 loc:'Rainier Valley',                 lat:47.5496, lng:-122.2574, desc:'Easy 2.5-mile old-growth loop on Lake Washington. Peaceful, beautiful, rarely crowded.', maps:'https://maps.apple.com/?q=Seward+Park+Seattle' },
+  { cat:'hike', name:'Washington Park Arboretum',   loc:'Madison Park',                   lat:47.6364, lng:-122.2958, desc:'230 acres of trees and paths. Late March brings early camellias and magnolias. Free.', maps:'https://maps.apple.com/?q=Washington+Park+Arboretum+Seattle' },
+  { cat:'hike', name:'Twin Falls',                  loc:'North Bend (~40 min)',            lat:47.4530, lng:-121.7054, desc:'Mossy forest, river views, gorgeous multi-tiered waterfall. Best in late March when snowmelt runs strong.', maps:'https://maps.apple.com/?q=Twin+Falls+Trailhead+North+Bend+WA' },
+  { cat:'hike', name:'Franklin Falls',              loc:'Snoqualmie Pass (~50 min)',       lat:47.4131, lng:-121.4425, desc:'1 mile each way, minimal elevation, jaw-dropping waterfall. Check trailhead access in March.', maps:'https://maps.apple.com/?q=Franklin+Falls+Trailhead+Snoqualmie+WA' },
+  { cat:'hike', name:'Rattlesnake Ledge',           loc:'North Bend (~35 min)',            lat:47.4347, lng:-121.7687, desc:'4-mile round-trip to a dramatic ledge with sweeping views of Rattlesnake Lake. Go on a weekday.', maps:'https://maps.apple.com/?q=Rattlesnake+Ledge+Trailhead+North+Bend+WA' },
+  { cat:'hike', name:'Wallace Falls',               loc:'Gold Bar (~1 hr)',                lat:47.8676, lng:-121.6820, desc:'Multiple waterfall viewpoints through lush PNW forest. Thunderous in late March from snowmelt.', maps:'https://maps.apple.com/?q=Wallace+Falls+State+Park+Gold+Bar+WA' },
+
+  // COFFEE
+  { cat:'coffee', name:'Espresso Vivace',           loc:'Capitol Hill · 532 Broadway E',  lat:47.6238, lng:-122.3206, desc:'Seattle institution since 1988. Italian-style espresso craft, famous latte art. Open from 6am.', maps:'https://maps.apple.com/?q=Espresso+Vivace+Capitol+Hill+Seattle' },
+  { cat:'coffee', name:'Ghost Note Coffee',         loc:'Capitol Hill · 1623 Bellevue Ave',lat:47.6159, lng:-122.3271, desc:'Craft drinks made with cocktail shakers. Try the Lush Life or the espresso float with local root beer.', maps:'https://maps.apple.com/?q=Ghost+Note+Coffee+Seattle' },
+  { cat:'coffee', name:'Victrola Coffee Roasters',  loc:'Capitol Hill · 310 E Pike St',   lat:47.6143, lng:-122.3273, desc:'Single-origin roastery in a 1920s building. On-site cupping room, great seating.', maps:'https://maps.apple.com/?q=Victrola+Coffee+Roasters+Pike+Street+Seattle' },
+  { cat:'coffee', name:'Lighthouse Roasters',       loc:'Fremont · 400 N 43rd St',        lat:47.6591, lng:-122.3542, desc:'30+ years in a 120-year-old Craftsman house. No WiFi by design. A true neighborhood classic.', maps:'https://maps.apple.com/?q=Lighthouse+Roasters+Fremont+Seattle' },
+  { cat:'coffee', name:'QED Coffee',                loc:'West Seattle · 6080 35th Ave SW', lat:47.5467, lng:-122.3761, desc:'Cozy neighborhood café with great burritos and inventive drinks. Perfect before Lincoln Park.', maps:'https://maps.apple.com/?q=QED+Coffee+West+Seattle' },
+  { cat:'coffee', name:'Mr. West Cafe Bar',         loc:'Downtown · 720 Olive Way',       lat:47.6141, lng:-122.3345, desc:'Cozy café-bar with exceptional cortado, Turkish eggs, and the Seattle Fog. Good for breakfast.', maps:'https://maps.apple.com/?q=Mr+West+Cafe+Bar+Seattle' },
+
+  // KENJI
+  { cat:'kenji', name:'Post Alley Pizza',           loc:'Downtown · 1123 Post Ave',       lat:47.6057, lng:-122.3381, desc:'"Makes quite possibly the best slices in town." Walk-up only, daily specials. Go after Pike Place.', maps:'https://maps.apple.com/?q=Post+Alley+Pizza+Seattle' },
+  { cat:'kenji', name:'Temple Pastries',            loc:'Central District · 2524 S Jackson',lat:47.5996, lng:-122.2989, desc:'"The king of croissant makers." Go before 9:30am on weekends for the best selection.', maps:'https://maps.apple.com/?q=Temple+Pastries+Seattle' },
+  { cat:'kenji', name:"Rachel's Bagels & Burritos", loc:'Ballard · 5451 Leary Ave NW',   lat:47.6679, lng:-122.3838, desc:'The birthplace of The Kenji Effect. Nick & Nora with lox is the move. Open 8am–1pm, closed Tuesdays.', maps:"https://maps.apple.com/?q=Rachel%27s+Bagels+Burritos+Ballard+Seattle" },
+  { cat:'kenji', name:'14 Carrot Cafe',             loc:'Eastlake · 2305 Eastlake Ave E', lat:47.6399, lng:-122.3261, desc:'Funky beloved diner. Kenji is a regular. Carrot cake pancakes. Open 8am–2pm, closed Tuesdays.', maps:'https://maps.apple.com/?q=14+Carrot+Cafe+Seattle' },
+  { cat:'kenji', name:'Aviv Hummus Bar',            loc:'Capitol Hill · 107 15th Ave E',  lat:47.6188, lng:-122.3130, desc:'"Everything I want in a falafel bar." Fresh falafel, hot pita, silky hummus. Closed Mondays.', maps:'https://maps.apple.com/?q=Aviv+Hummus+Bar+Capitol+Hill+Seattle' },
+  { cat:'kenji', name:'Kilig',                      loc:'Int\'l District · 710 8th Ave S', lat:47.5966, lng:-122.3223, desc:'"Filipino comfort food with precision and heart." Sizzling sisig and legendary crispy wings.', maps:'https://maps.apple.com/?q=Kilig+Filipino+Seattle' },
+  { cat:'kenji', name:"Loretta's Northwesterner",   loc:'South Seattle · 8617 14th Ave S', lat:47.5259, lng:-122.3151, desc:'"Three items high in the running for best in the city." Dive bar, 21+, great tavern burger.', maps:"https://maps.apple.com/?q=Loretta%27s+Northwesterner+Seattle" },
+  { cat:'kenji', name:'Buckshot Honey',             loc:'Snoqualmie (40 min east)',        lat:47.5273, lng:-121.8237, desc:'"A perfect post-hike stop." Smoked brisket on rye, cheddar apple pie, braised collards.', maps:'https://maps.apple.com/?q=Buckshot+Honey+Snoqualmie+WA' },
+  { cat:'kenji', name:'Proper Fish',                loc:'Bainbridge Island (ferry)',        lat:47.6252, lng:-122.5206, desc:'"The best fish and chips around. Worth the ferry ride." Golden batter, thick-cut fries, mushy peas.', maps:'https://maps.apple.com/?q=Proper+Fish+Bainbridge+Island+WA' },
+
+  // SIGHTS
+  { cat:'sight', name:'Pike Place Market',          loc:'Downtown Waterfront',             lat:47.6094, lng:-122.3420, desc:'Fish-throwing, flowers, and the Gum Wall. Best before 10am on a weekday. Post Alley Pizza is steps away.', maps:'https://maps.apple.com/?q=Pike+Place+Market+Seattle' },
+  { cat:'sight', name:'The Gum Wall',               loc:'Post Alley (under Pike Place)',   lat:47.6084, lng:-122.3403, desc:'A brick alley plastered floor-to-ceiling in chewed gum. Delightfully weird. Open 24 hours.', maps:'https://maps.apple.com/?q=Gum+Wall+Post+Alley+Seattle' },
+  { cat:'sight', name:'Olympic Sculpture Park',     loc:'Belltown · 2901 Western Ave',     lat:47.6166, lng:-122.3553, desc:'Free SAM outdoor sculpture park on the waterfront with sweeping views of Elliott Bay. Always open.', maps:'https://maps.apple.com/?q=Olympic+Sculpture+Park+Seattle' },
+  { cat:'sight', name:'Seattle Japanese Garden',    loc:'Arboretum · 1075 E Lake Wash Blvd',lat:47.6290, lng:-122.2963, desc:'Koi pond, maple groves, stepping stones. Late March cherry blossoms. Small fee. Closed Mondays.', maps:'https://maps.apple.com/?q=Seattle+Japanese+Garden' },
+  { cat:'sight', name:'Chihuly Garden and Glass',   loc:'Seattle Center · 305 Harrison St', lat:47.6206, lng:-122.3504, desc:'Extraordinary glass sculpture gardens next to the Space Needle. Stunning on grey days.', maps:'https://maps.apple.com/?q=Chihuly+Garden+and+Glass+Seattle' },
+  { cat:'sight', name:'Kerry Park',                 loc:'Queen Anne · 211 W Highland Dr',  lat:47.6295, lng:-122.3599, desc:'The classic Seattle skyline view with Space Needle and Mt. Rainier. Best at golden hour. Free.', maps:'https://maps.apple.com/?q=Kerry+Park+Seattle' },
+  { cat:'sight', name:'Fremont Neighborhood',       loc:'Fremont',                         lat:47.6521, lng:-122.3501, desc:'The Fremont Troll, Sunday market, and Lighthouse Roasters all within walking distance. Quirky and free.', maps:'https://maps.apple.com/?q=Fremont+Troll+Seattle' },
+  { cat:'sight', name:'Capitol Hill',               loc:'Capitol Hill',                    lat:47.6205, lng:-122.3177, desc:"Seattle's best walking neighborhood. Dense with coffee, food, bookshops, and street life.", maps:'https://maps.apple.com/?q=Capitol+Hill+Seattle' },
+  { cat:'sight', name:'UW Cherry Blossoms',          loc:'UW Campus · The Quad',            lat:47.6566, lng:-122.3086, desc:'29 Yoshino cherry trees arch over the Quad in a pink canopy. 2026 peak bloom ~March 20 — late March is the optimal window. Go early morning on a weekday. Free.', maps:'https://maps.apple.com/?q=UW+Quad+Cherry+Blossoms+Seattle' },
+];
+
+// ── COLORS & ICONS ───────────────────────────────────────────────────────────
+const CAT_COLOR  = { hike:'#30d158', coffee:'#c49a53', kenji:'#ff9f0a', sight:'#2997ff' };
+const CAT_EMOJI  = { hike:'🥾', coffee:'☕', kenji:'🍽️', sight:'🌆' };
+const CAT_LABEL  = { hike:'Hike', coffee:'Coffee', kenji:'Kenji Pick', sight:'Sight' };
+
+function makeIcon(cat) {
+  const color = CAT_COLOR[cat];
+  const emoji = CAT_EMOJI[cat];
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="44" viewBox="0 0 36 44">
+      <defs>
+        <filter id="s" x="-30%" y="-20%" width="160%" height="160%">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,.55)"/>
+        </filter>
+      </defs>
+      <path d="M18 0C8.059 0 0 8.059 0 18c0 13.5 18 26 18 26S36 31.5 36 18C36 8.059 27.941 0 18 0z"
+            fill="${color}" filter="url(#s)"/>
+      <circle cx="18" cy="18" r="11" fill="rgba(0,0,0,.25)"/>
+      <text x="18" y="23" text-anchor="middle" font-size="13">${emoji}</text>
+    </svg>`;
+  return L.divIcon({
+    html: svg,
+    className: '',
+    iconSize: [36, 44],
+    iconAnchor: [18, 44],
+    popupAnchor: [0, -46],
+  });
+}
+
+// ── INIT MAP ─────────────────────────────────────────────────────────────────
+const map = L.map('map', {
+  center: [47.620, -122.340],
+  zoom: 12,
+  zoomControl: true,
+  attributionControl: true,
+});
+
+// Dark tile layer — CartoDB Dark Matter
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a>',
+  subdomains: 'abcd',
+  maxZoom: 19,
+}).addTo(map);
+
+// ── BUILD MARKERS ─────────────────────────────────────────────────────────────
+const markersBycat = { hike:[], coffee:[], kenji:[], sight:[] };
+
+PLACES.forEach(p => {
+  const color = CAT_COLOR[p.cat];
+  const popup = `
+    <div class="pop">
+      <div class="pop-cat ${p.cat}">${CAT_EMOJI[p.cat]} ${CAT_LABEL[p.cat]}</div>
+      <div class="pop-name">${p.name}</div>
+      <div class="pop-loc">${p.loc}</div>
+      <div class="pop-desc">${p.desc}</div>
+      <a class="pop-link" href="${p.maps}" target="_blank">Open in Maps ↗</a>
+    </div>`;
+
+  const marker = L.marker([p.lat, p.lng], { icon: makeIcon(p.cat) })
+    .bindPopup(popup, { maxWidth: 280, minWidth: 220 })
+    .addTo(map);
+
+  markersBycat[p.cat].push(marker);
+});
+
+// ── MAP FILTER BUTTONS ────────────────────────────────────────────────────────
+document.querySelectorAll('.map-filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.map-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.cat;
+
+    Object.entries(markersBycat).forEach(([cat, markers]) => {
+      markers.forEach(m => {
+        if (f === 'all' || f === cat) {
+          if (!map.hasLayer(m)) map.addLayer(m);
+        } else {
+          if (map.hasLayer(m)) map.removeLayer(m);
+        }
+      });
+    });
+
+    // Fit map to visible markers
+    const visible = [];
+    Object.entries(markersBycat).forEach(([cat, markers]) => {
+      if (f === 'all' || f === cat) visible.push(...markers);
+    });
+    if (visible.length) {
+      const group = L.featureGroup(visible);
+      map.fitBounds(group.getBounds().pad(0.15));
+    }
+  });
+});
 </script>
 </body>
 </html>
