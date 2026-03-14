@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#0a0a0a" />
+  <title>Teera's Seattle Weekend</title>
+
+  <!--
+    SF-inspired typography:
+    - System font stack uses -apple-system / BlinkMacSystemFont which IS SF Pro on Apple devices
+    - Inter as the web fallback (closest optical match for non-Apple)
+    - Display text uses a condensed weight to mimic Apple's big hero lockups
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── DESIGN TOKENS ── */
+    :root {
+      /* Palette — dark base, tinted glass surfaces */
+      --bg:          #0a0a0a;
+      --surface:     #161616;
+      --surface-2:   #1e1e1e;
+      --surface-3:   #262626;
+      --border:      rgba(255,255,255,.08);
+      --border-2:    rgba(255,255,255,.13);
+
+      /* Text */
+      --text-primary:   #f5f5f7;   /* Apple's signature near-white */
+      --text-secondary: #a1a1a6;   /* Apple mid-grey */
+      --text-tertiary:  #6e6e73;   /* Apple dim-grey */
+
+      /* Accent tints (one per category) */
+      --green:   #30d158;   /* Apple green */
+      --brown:   #c49a53;   /* warm espresso gold */
+      --orange:  #ff9f0a;   /* Apple orange */
+      --blue:    #2997ff;   /* Apple blue */
+
+      /* Radius & spacing */
+      --r-card: 18px;
+      --r-tag:  100px;
+      --r-btn:  100px;
+
+      /* Safe areas */
+      --safe-top: env(safe-area-inset-top,  0px);
+      --safe-bot: env(safe-area-inset-bottom, 0px);
+
+      /* SF / Inter type stack */
+      --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Helvetica Neue', sans-serif;
+      --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Helvetica Neue', sans-serif;
+    }
+
+    /* ── RESET ── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: calc(56px + var(--safe-top)) 24px 52px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg);
+    }
+    /* Soft glow blobs — Apple uses these on product pages */
+    .hero::before, .hero::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+    .hero::before {
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, rgba(48,209,88,.18) 0%, transparent 70%);
+      top: -80px; left: -100px;
+    }
+    .hero::after {
+      width: 360px; height: 360px;
+      background: radial-gradient(circle, rgba(41,151,255,.14) 0%, transparent 70%);
+      bottom: -60px; right: -80px;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 14px;
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.6rem, 10vw, 4.8rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -.03em;           /* Apple's tight display tracking */
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, #30d158 0%, #2997ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 17px;                   /* Apple body size */
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      max-width: 380px;
+      margin: 0 auto 28px;
+    }
+    .weather-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface-2);
+      border: 1px solid var(--border-2);
+      border-radius: var(--r-btn);
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    /* ── STICKY FILTER BAR ── */
+    .filter-bar-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,10,.82);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--border);
+    }
+    .filters {
+      display: flex;
+      gap: 8px;
+      padding: 10px 16px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .filters::-webkit-scrollbar { display: none; }
+
+    .filter-btn {
+      height: 44px;
+      padding: 0 18px;
+      border-radius: var(--r-btn);
+      border: 1px solid var(--border-2);
+      background: var(--surface-2);
+      color: var(--text-secondary);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      flex-shrink: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: background .15s, color .15s, border-color .15s;
+    }
+    .filter-btn.active {
+      background: var(--text-primary);
+      color: var(--bg);
+      border-color: var(--text-primary);
+    }
+
+    /* ── COUNT ── */
+    .showing-count {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      letter-spacing: .02em;
+      padding: 10px 16px 2px;
+    }
+
+    /* ── GRID ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 12px;
+      padding: 10px 12px 16px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-card);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform .2s ease, border-color .2s;
+    }
+    @media (hover: hover) {
+      .card:hover {
+        transform: translateY(-2px);
+        border-color: var(--border-2);
+      }
+    }
+    .card.hidden { display: none; }
+
+    /* Thin accent line per category */
+    .card-accent { height: 3px; width: 100%; }
+    .cat-hike   .card-accent { background: var(--green); }
+    .cat-coffee .card-accent { background: var(--brown); }
+    .cat-kenji  .card-accent { background: var(--orange); }
+    .cat-sight  .card-accent { background: var(--blue); }
+
+    .card-body {
+      padding: 18px 20px 14px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -.02em;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    /* Small SF-style lozenge badges */
+    .card-badge {
+      flex-shrink: 0;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: var(--r-tag);
+      white-space: nowrap;
+      margin-top: 2px;
+      letter-spacing: .02em;
+    }
+    .cat-hike   .card-badge { background: rgba(48,209,88,.15);  color: var(--green); }
+    .cat-coffee .card-badge { background: rgba(196,154,83,.15); color: var(--brown); }
+    .cat-kenji  .card-badge { background: rgba(255,159,10,.15); color: var(--orange); }
+    .cat-sight  .card-badge { background: rgba(41,151,255,.15); color: var(--blue); }
+
+    .card-location {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      margin-bottom: 9px;
+      letter-spacing: .01em;
+    }
+    .card-desc {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      flex: 1;
+    }
+    .card-desc strong { color: var(--text-primary); font-weight: 500; }
+
+    /* Kenji quote block */
+    .card-quote {
+      margin-top: 12px;
+      padding: 10px 14px;
+      background: var(--surface-3);
+      border-left: 2px solid var(--orange);
+      border-radius: 0 10px 10px 0;
+      font-size: 13px;
+      font-style: italic;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .card-quote .attrib {
+      font-style: normal;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--orange);
+      display: block;
+      margin-top: 5px;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+    }
+
+    /* Card footer */
+    .card-footer {
+      padding: 10px 20px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border-top: 1px solid var(--border);
+      margin-top: 14px;
+    }
+    .card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    .tag {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 9px;
+      border-radius: var(--r-tag);
+      background: var(--surface-3);
+      color: var(--text-tertiary);
+      letter-spacing: .01em;
+    }
+    .tag.march-safe { background: rgba(48,209,88,.12);  color: var(--green); }
+    .tag.day-trip   { background: rgba(255,159,10,.12); color: var(--orange); }
+    .tag.ferry      { background: rgba(41,151,255,.12); color: var(--blue); }
+    .tag.bloom      { background: rgba(255,105,180,.12); color: #ff79b0; }
+    .tag.paid       { background: rgba(255,255,255,.07); color: var(--text-tertiary); }
+
+    /* Map button — Apple-blue pill */
+    .map-link {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 34px;
+      padding: 0 16px;
+      border-radius: var(--r-btn);
+      background: rgba(41,151,255,.18);
+      color: var(--blue);
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      min-width: 72px;
+      transition: background .15s;
+      letter-spacing: .01em;
+    }
+    .map-link:active { background: rgba(41,151,255,.3); }
+
+    /* ── COMBOS ── */
+    .combos {
+      max-width: 1200px;
+      margin: 8px auto 0;
+      padding: 0 12px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 24px 0 10px;
+    }
+    .section-header h2 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -.03em;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .combos-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-card);
+      padding: 22px 20px;
+      margin-bottom: 32px;
+    }
+    .combos-box h3 {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -.01em;
+      color: var(--orange);
+      margin-bottom: 16px;
+    }
+    .combo-list { display: flex; flex-direction: column; gap: 14px; }
+    .combo {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+    .combo strong { color: var(--text-primary); font-weight: 600; }
+    .combo-arrow {
+      color: var(--green);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+      font-size: 13px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 24px 20px calc(20px + var(--safe-bot));
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-tertiary);
+      border-top: 1px solid var(--border);
+      letter-spacing: .01em;
+    }
+    footer strong { color: var(--text-secondary); font-weight: 500; }
+
+    /* ── SINGLE COLUMN ON SMALL SCREENS ── */
+    @media (max-width: 600px) {
+      .grid { grid-template-columns: 1fr; }
+      .hero h1 { letter-spacing: -.025em; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <p class="hero-eyebrow">A weekend guide · Seattle</p>
+  <h1>Hey Teera,<br><em>welcome</em> to Seattle</h1>
+  <p class="hero-sub">Hikes, coffee, sights, and some of Seattle's best food — curated for a late March long weekend while you have a few hours to yourself.</p>
+  <span class="weather-pill">☁️ Late March: pack layers, expect some rain, embrace it</span>
+</header>
+
+<!-- STICKY FILTER BAR -->
+<div class="filter-bar-wrap">
+  <nav class="filters">
+    <button class="filter-btn active" data-filter="all">🗺️ All</button>
+    <button class="filter-btn" data-filter="hike">🥾 Hikes</button>
+    <button class="filter-btn" data-filter="coffee">☕ Coffee</button>
+    <button class="filter-btn" data-filter="kenji">🍽️ Kenji Picks</button>
+    <button class="filter-btn" data-filter="sight">🌆 Sights</button>
+  </nav>
+</div>
+
+<p class="showing-count" id="count"></p>
+
+<main class="grid" id="grid">
+
+  <!-- ══════ HIKES ══════ -->
+
+  <article class="card cat-hike" data-cat="hike">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Discovery Park Loop</h2><span class="card-badge">🥾 Hike</span></div>
+      <p class="card-location">📍 Magnolia, Seattle</p>
+      <p class="card-desc">Seattle's largest park — forest trails wind down to a historic lighthouse and a secluded pebble beach on Puget Sound. You'll forget you're in a city within five minutes. Multiple loops from 2 to 5 miles.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag march-safe">✓ March-safe</span><span class="tag">In-city</span><span class="tag">Easy–Mod</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Discovery+Park+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-hike" data-cat="hike">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Lincoln Park</h2><span class="card-badge">🥾 Hike</span></div>
+      <p class="card-location">📍 West Seattle · 8011 Fauntleroy Way SW</p>
+      <p class="card-desc">A West Seattle gem with 5 miles of forested trails opening onto views of the Olympics and Puget Sound. A long coastal trail runs right along the waterline. Free parking, no fees. Great on a clear day — or a moody rainy one.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag march-safe">✓ March-safe</span><span class="tag">In-city</span><span class="tag">Easy–Mod</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Lincoln+Park+West+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-hike" data-cat="hike">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Seward Park</h2><span class="card-badge">🥾 Hike</span></div>
+      <p class="card-location">📍 Rainier Valley · 5900 Lake Washington Blvd S</p>
+      <p class="card-desc">A peninsula of old-growth forest on Lake Washington — there's reportedly a 500-year-old tree in there. Easy 2.5-mile loop with constant lake views and Mt. Rainier on clear days. Peaceful, beautiful, and rarely crowded.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag march-safe">✓ March-safe</span><span class="tag">In-city</span><span class="tag">Easy</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Seward+Park+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-hike" data-cat="hike">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Washington Park Arboretum</h2><span class="card-badge">🥾 Hike</span></div>
+      <p class="card-location">📍 Madison Park · 2300 Arboretum Dr E</p>
+      <p class="card-desc">A 230-acre living tree museum managed by the UW. Late March is special — early camellias and magnolias are blooming. Boardwalk paths, lily pad ponds, sequoia groves. Free and open daily 8am–8pm.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag march-safe">✓ March-safe</span><span class="tag">In-city</span><span class="tag bloom">🌸 Blooms</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Washington+Park+Arboretum+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-hike" data-cat="hike">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Twin Falls</h2><span class="card-badge">🥾 Hike</span></div>
+      <p class="card-location">📍 North Bend · ~40 min east</p>
+      <p class="card-desc">Mossy forest, river views the whole way, and a gorgeous multi-tiered waterfall at the end. Easy and well-maintained. In late March the falls run strong from snowmelt — exactly when this hike is at its best.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag march-safe">✓ March-safe</span><span class="tag day-trip">Day trip</span><span class="tag">Easy</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Twin+Falls+Trailhead+North+Bend+WA" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-hike" data-cat="hike">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Franklin Falls</h2><span class="card-badge">🥾 Hike</span></div>
+      <p class="card-location">📍 Snoqualmie Pass · ~50 min east</p>
+      <p class="card-desc">One mile each way, minimal elevation gain, jaw-dropping waterfall at the end. Very family-friendly. <strong>Note:</strong> check trailhead access in March — use Exit 52 if Exit 47 is gated.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag march-safe">✓ March-safe</span><span class="tag day-trip">Day trip</span><span class="tag">Easy</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Franklin+Falls+Trailhead+Snoqualmie+WA" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-hike" data-cat="hike">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Rattlesnake Ledge</h2><span class="card-badge">🥾 Hike</span></div>
+      <p class="card-location">📍 North Bend · ~35 min east</p>
+      <p class="card-desc">Seattle's most popular day hike: a steady 4-mile round-trip through forest opens onto a dramatic rocky ledge with sweeping views of Rattlesnake Lake. Go on a weekday if you can — weekends fill up fast.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag march-safe">✓ March-safe</span><span class="tag day-trip">Day trip</span><span class="tag">Moderate</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Rattlesnake+Ledge+Trailhead+North+Bend+WA" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-hike" data-cat="hike">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Wallace Falls</h2><span class="card-badge">🥾 Hike</span></div>
+      <p class="card-location">📍 Gold Bar · ~1 hr north</p>
+      <p class="card-desc">Multiple waterfall viewpoints through lush PNW forest. Spring is peak season — the falls are thunderous from snowmelt. About 5.5 miles round-trip with some elevation gain.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag march-safe">✓ March-safe</span><span class="tag day-trip">Day trip</span><span class="tag">Moderate</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Wallace+Falls+State+Park+Gold+Bar+WA" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <!-- ══════ COFFEE ══════ -->
+
+  <article class="card cat-coffee" data-cat="coffee">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Espresso Vivace</h2><span class="card-badge">☕ Coffee</span></div>
+      <p class="card-location">📍 Capitol Hill · 532 Broadway E</p>
+      <p class="card-desc">A Seattle institution since 1988. Pioneered Italian-style espresso craft in the US. Order the Nico or a velvet mocha. Sidewalk bar available for coffee on the go. Open from 6am daily.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Classic</span><span class="tag">Latte art</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Espresso+Vivace+Capitol+Hill+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-coffee" data-cat="coffee">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Ghost Note Coffee</h2><span class="card-badge">☕ Coffee</span></div>
+      <p class="card-location">📍 Capitol Hill · 1623 Bellevue Ave</p>
+      <p class="card-desc">Drinks made with cocktail shakers and house ingredients. The Lush Life (espresso, orange blossom honey, almond milk) is floral and perfect. The espresso float — iced latte with local root beer — is the one to try.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Craft drinks</span><span class="tag">Inventive</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Ghost+Note+Coffee+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-coffee" data-cat="coffee">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Victrola Coffee Roasters</h2><span class="card-badge">☕ Coffee</span></div>
+      <p class="card-location">📍 Capitol Hill · 310 E Pike St</p>
+      <p class="card-desc">A roastery and café in a 1920s building on Pike Street. Single-origin focus, on-site cupping room, always buzzing. They taste hundreds of cups a week to maintain their standard — it shows. Good seating.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Single-origin</span><span class="tag">Good seating</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Victrola+Coffee+Roasters+Pike+Street+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-coffee" data-cat="coffee">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Lighthouse Roasters</h2><span class="card-badge">☕ Coffee</span></div>
+      <p class="card-location">📍 Fremont · 400 N 43rd St</p>
+      <p class="card-desc">30+ years in a 120-year-old Craftsman house in upper Fremont. Deliberately no WiFi — their sign reads "we prefer a café full of conversation." One of Seattle's best neighborhood institutions. Pair with a walk through Fremont.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Neighborhood gem</span><span class="tag">No WiFi</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Lighthouse+Roasters+Fremont+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-coffee" data-cat="coffee">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">QED Coffee</h2><span class="card-badge">☕ Coffee</span></div>
+      <p class="card-location">📍 West Seattle · 6080 35th Ave SW</p>
+      <p class="card-desc">A cozy, plant-filled neighborhood café with great burritos and inventive drinks — the iced coffee with ginger honey syrup is a standout. Open 6am weekdays, 7am weekends. Perfect before or after Lincoln Park.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">West Seattle</span><span class="tag">Food too</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=QED+Coffee+West+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-coffee" data-cat="coffee">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Mr. West Cafe Bar</h2><span class="card-badge">☕ Coffee</span></div>
+      <p class="card-location">📍 Downtown · 720 Olive Way</p>
+      <p class="card-desc">Cozy modern café-bar downtown with serious espresso and great food. The cortado with cardamom syrup is exceptional, the Turkish eggs are a hit, and the Seattle Fog is a local favorite. Good for a sit-down breakfast before a day out.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Downtown</span><span class="tag">Breakfast</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Mr+West+Cafe+Bar+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <!-- ══════ KENJI PICKS ══════ -->
+
+  <article class="card cat-kenji" data-cat="kenji">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Post Alley Pizza</h2><span class="card-badge">🍽️ Kenji Pick</span></div>
+      <p class="card-location">📍 Downtown · 1123 Post Ave (near Pike Place)</p>
+      <p class="card-desc">A tiny walk-up slice shop tucked just off the waterfront. No seating — just perfect pizza to eat while you wander. Daily specials, meat and veggie. Walk here after Pike Place Market.</p>
+      <div class="card-quote">"Makes quite possibly the best slices in town."<span class="attrib">— Kenji López-Alt</span></div>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Lunch</span><span class="tag">Walk-up</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Post+Alley+Pizza+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-kenji" data-cat="kenji">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Temple Pastries</h2><span class="card-badge">🍽️ Kenji Pick</span></div>
+      <p class="card-location">📍 Central District · 2524 S Jackson St</p>
+      <p class="card-desc">Kenji's go-to for croissants. Beautiful pastry case, great coffee, plant-filled interior. Get there before 9:30am on weekends for the best selection. The gruyère and shallot croissant is especially good.</p>
+      <div class="card-quote">"The king of croissant makers."<span class="attrib">— Kenji López-Alt via Apple Maps</span></div>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Breakfast</span><span class="tag">Pastries</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Temple+Pastries+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-kenji" data-cat="kenji">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Rachel's Bagels & Burritos</h2><span class="card-badge">🍽️ Kenji Pick</span></div>
+      <p class="card-location">📍 Ballard · 5451 Leary Ave NW</p>
+      <p class="card-desc">Kenji's shoutout caused such demand the shop had to double production — "The Kenji Effect" was born here. The Nick & Nora with lox is the move. Closed Tuesdays. Open 8am–1pm, so go early.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Breakfast</span><span class="tag">Bagels</span><span class="tag">Ballard</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Rachel%27s+Bagels+Burritos+Ballard+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-kenji" data-cat="kenji">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">14 Carrot Cafe</h2><span class="card-badge">🍽️ Kenji Pick</span></div>
+      <p class="card-location">📍 Eastlake · 2305 Eastlake Ave E</p>
+      <p class="card-desc">A funky beloved diner open for breakfast and lunch. Kenji is a regular. The carrot cake pancakes with cream cheese are the reason to come. Crab cake Benedict also excellent. Closed Tuesdays. Open 8am–2pm.</p>
+      <div class="card-quote">"Custardy brioche griddled golden brown with soft butter — exactly what French toast should be."<span class="attrib">— Kenji López-Alt</span></div>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Breakfast</span><span class="tag">Diner</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=14+Carrot+Cafe+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-kenji" data-cat="kenji">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Aviv Hummus Bar</h2><span class="card-badge">🍽️ Kenji Pick</span></div>
+      <p class="card-location">📍 Capitol Hill · 107 15th Ave E</p>
+      <p class="card-desc">Fresh-made falafel, hot puffy pita, silky hummus, and spicy condiments. Israeli counter food at its best. Order the falafel plate with fried eggplant and zhug. Closed Mondays.</p>
+      <div class="card-quote">"Everything I want in a falafel bar."<span class="attrib">— Kenji López-Alt</span></div>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Lunch</span><span class="tag">Vegetarian-friendly</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Aviv+Hummus+Bar+Capitol+Hill+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-kenji" data-cat="kenji">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Kilig</h2><span class="card-badge">🍽️ Kenji Pick</span></div>
+      <p class="card-location">📍 International District · 710 8th Ave S</p>
+      <p class="card-desc">Filipino comfort food with precision. Kenji raves about the sizzling sisig (pork shoulder, runny egg) and the honey-chili chicken wings with an impossibly crisp crust. Open Wed–Sun from noon.</p>
+      <div class="card-quote">"Filipino comfort food with precision and heart."<span class="attrib">— Kenji López-Alt</span></div>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Lunch/Dinner</span><span class="tag">Filipino</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Kilig+Filipino+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-kenji" data-cat="kenji">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Loretta's Northwesterner</h2><span class="card-badge">🍽️ Kenji Pick</span></div>
+      <p class="card-location">📍 South Seattle · 8617 14th Ave S</p>
+      <p class="card-desc">A no-nonsense South Seattle dive bar that takes its food seriously. Tavern burger, fish and chips, and pork cutlet sandwich — Kenji says all three are in contention for best in the city. Dark, relaxed, great burgers. 21+.</p>
+      <div class="card-quote">"Not just one, but three items would be high in the running for best in the city."<span class="attrib">— Kenji López-Alt via The Infatuation</span></div>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Lunch/Dinner</span><span class="tag">Dive bar</span><span class="tag">21+</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Loretta%27s+Northwesterner+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-kenji" data-cat="kenji">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Buckshot Honey</h2><span class="card-badge">🍽️ Kenji Pick</span></div>
+      <p class="card-location">📍 Snoqualmie · 40 min east</p>
+      <p class="card-desc">A cozy BBQ spot right in Snoqualmie — perfect after Twin Falls or Rattlesnake Ledge. The smoked brisket on rye with roasted onions and pickled peppers is the move. Also: cheddar apple pie and braised collards.</p>
+      <div class="card-quote">"A perfect post-hike stop. Don't sleep on the braised collards or the cheddar apple pie."<span class="attrib">— Kenji López-Alt</span></div>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag day-trip">Day trip</span><span class="tag">Post-hike</span><span class="tag">BBQ</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Buckshot+Honey+Snoqualmie+WA" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-kenji" data-cat="kenji">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Proper Fish</h2><span class="card-badge">🍽️ Kenji Pick</span></div>
+      <p class="card-location">📍 Bainbridge Island · ferry ride</p>
+      <p class="card-desc">British-born chef Harvey Wolff makes fish and chips worth the 35-minute ferry crossing. Huge fillet, golden batter, thick-cut fries, fresh mushy peas. The ferry over offers beautiful skyline views heading out of downtown.</p>
+      <div class="card-quote">"The best fish and chips around. Worth the ferry ride."<span class="attrib">— Kenji López-Alt</span></div>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag ferry">⛴ Ferry</span><span class="tag day-trip">Day trip</span><span class="tag">Lunch</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Proper+Fish+Bainbridge+Island+WA" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <!-- ══════ SIGHTS ══════ -->
+
+  <article class="card cat-sight" data-cat="sight">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Pike Place Market</h2><span class="card-badge">🌆 Sight</span></div>
+      <p class="card-location">📍 Downtown Waterfront</p>
+      <p class="card-desc">Fish-throwing, flower vendors, great produce, and the original Starbucks (skip the line). Best on a weekday morning before 10am when you can actually move around. Post Alley Pizza and Mr. West are both nearby.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Iconic</span><span class="tag">Morning</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Pike+Place+Market+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-sight" data-cat="sight">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">The Gum Wall</h2><span class="card-badge">🌆 Sight</span></div>
+      <p class="card-location">📍 Post Alley · 1428 Post Alley (under Pike Place)</p>
+      <p class="card-desc">A brick alley plastered floor-to-ceiling in chewed gum — one of Seattle's most delightfully weird attractions. Open 24 hours. Add your own piece. Smells like spearmint and chaos. Worth the five minutes, right after or before Pike Place Market.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Free</span><span class="tag">Weird + fun</span><span class="tag">Quick stop</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Gum+Wall+Post+Alley+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-sight" data-cat="sight">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Olympic Sculpture Park</h2><span class="card-badge">🌆 Sight</span></div>
+      <p class="card-location">📍 Belltown · 2901 Western Ave</p>
+      <p class="card-desc">A free, outdoor SAM-run sculpture park on the waterfront with sweeping views of Elliott Bay, the Olympics, and the Seattle skyline. Walking paths wind through large-scale artwork down to the shoreline. All-weather, always open, always free.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Free</span><span class="tag">Waterfront</span><span class="tag">All-weather</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Olympic+Sculpture+Park+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-sight" data-cat="sight">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Seattle Japanese Garden</h2><span class="card-badge">🌆 Sight</span></div>
+      <p class="card-location">📍 Arboretum · 1075 E Lake Washington Blvd</p>
+      <p class="card-desc">A meticulously designed traditional Japanese garden tucked inside the Arboretum — koi pond, maple groves, stepping stones, and a tea house. Small and serene. Late March often brings early cherry blossoms. Closed Mondays. Small admission fee.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag paid">Small fee</span><span class="tag bloom">🌸 Blooms</span><span class="tag">Tue–Sun</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Seattle+Japanese+Garden" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-sight" data-cat="sight">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Chihuly Garden and Glass</h2><span class="card-badge">🌆 Sight</span></div>
+      <p class="card-location">📍 Seattle Center · 305 Harrison St</p>
+      <p class="card-desc">Extraordinary glass sculpture gardens next to the Space Needle. Especially stunning on a grey day when colors pop against the sky. The Glasshouse has a massive suspended installation — one of the most photogenic spots in Seattle.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag paid">Paid</span><span class="tag">All-weather</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Chihuly+Garden+and+Glass+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-sight" data-cat="sight">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Kerry Park</h2><span class="card-badge">🌆 Sight</span></div>
+      <p class="card-location">📍 Queen Anne · 211 W Highland Dr</p>
+      <p class="card-desc">The classic Seattle skyline view — Space Needle, downtown, Elliott Bay, and on clear days Mt. Rainier framed behind everything. Best at golden hour or after dark. Free and quick. Find street parking one block away.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Free</span><span class="tag">Views</span><span class="tag">Quick stop</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Kerry+Park+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-sight" data-cat="sight">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Fremont Neighborhood</h2><span class="card-badge">🌆 Sight</span></div>
+      <p class="card-location">📍 Fremont</p>
+      <p class="card-desc">Seattle's self-proclaimed "Center of the Universe." The giant troll sculpture under the Aurora Bridge, the year-round Sunday market, and Lighthouse Roasters all within walking distance. Quirky, walkable, full of character.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Free</span><span class="tag">Walkable</span><span class="tag">Quirky</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Fremont+Troll+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-sight" data-cat="sight">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Capitol Hill</h2><span class="card-badge">🌆 Sight</span></div>
+      <p class="card-location">📍 Capitol Hill</p>
+      <p class="card-desc">Seattle's best walking neighborhood. Dense with great coffee (Espresso Vivace, Victrola, Ghost Note all within blocks), good food (Aviv, Kilig), independent bookshops, and street life. Just wander.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Walkable</span><span class="tag">Coffee cluster</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Capitol+Hill+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+</main>
+
+<!-- COMBOS -->
+<section class="combos">
+  <div class="section-header">
+    <h2>Perfect day combos</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="combos-box">
+    <h3>Ideas for your free time</h3>
+    <div class="combo-list">
+      <div class="combo"><span class="combo-arrow">→</span><span><strong>West Seattle Day:</strong> QED Coffee → Lincoln Park coastal trail → Loretta's Northwesterner for lunch. All in one neighborhood.</span></div>
+      <div class="combo"><span class="combo-arrow">→</span><span><strong>In-City Nature:</strong> Arboretum walk (spring blooms!) + Japanese Garden → Seward Park loop by Lake Washington → 14 Carrot for brunch if you time it right.</span></div>
+      <div class="combo"><span class="combo-arrow">→</span><span><strong>Waterfall + BBQ:</strong> Morning drive to Twin Falls → lunch at Buckshot Honey in Snoqualmie on the way home.</span></div>
+      <div class="combo"><span class="combo-arrow">→</span><span><strong>Capitol Hill Morning:</strong> Temple Pastries → Espresso Vivace or Ghost Note → Aviv for lunch.</span></div>
+      <div class="combo"><span class="combo-arrow">→</span><span><strong>Ferry Adventure:</strong> Downtown ferry to Bainbridge Island (35 min, skyline views both ways) → lunch at Proper Fish → ferry back. A perfect half-day.</span></div>
+      <div class="combo"><span class="combo-arrow">→</span><span><strong>Classic Downtown:</strong> Mr. West for breakfast → Pike Place Market + Gum Wall → Post Alley Pizza for lunch → Olympic Sculpture Park → Kerry Park for the view.</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Made for <strong>Teera's late March Seattle weekend</strong> &nbsp;·&nbsp; Food picks by <strong>J. Kenji López-Alt</strong> &nbsp;·&nbsp; All hikes confirmed March-safe
+</footer>
+
+<script>
+  const cards   = document.querySelectorAll('.card');
+  const btns    = document.querySelectorAll('.filter-btn');
+  const countEl = document.getElementById('count');
+  const labels  = { all: 'recommendation', hike: 'hike', coffee: 'coffee shop', kenji: 'Kenji pick', sight: 'sight' };
+
+  function updateCount(f) {
+    const n = f === 'all' ? cards.length : document.querySelectorAll(`.card[data-cat="${f}"]`).length;
+    countEl.textContent = `${n} ${labels[f]}${n !== 1 ? 's' : ''}`;
+  }
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      cards.forEach(c => c.classList.toggle('hidden', f !== 'all' && c.dataset.cat !== f));
+      updateCount(f);
+      document.getElementById('grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  updateCount('all');
+</script>
+</body>
+</html>
