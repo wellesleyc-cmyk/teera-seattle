@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="theme-color" content="#FAF6EE" />
   <title>Seattle Weekend Guide</title>
 
   <!--
@@ -22,25 +22,25 @@
   <style>
     /* ── DESIGN TOKENS ── */
     :root {
-      /* Palette — dark base, tinted glass surfaces */
-      --bg:          #0a0a0a;
-      --surface:     #161616;
-      --surface-2:   #1e1e1e;
-      --surface-3:   #262626;
-      --border:      rgba(255,255,255,.08);
-      --border-2:    rgba(255,255,255,.13);
+      /* Palette — Douglas Fir & Cream, light PNW surfaces */
+      --bg:          #FAF6EE;
+      --surface:     #FFFFFF;
+      --surface-2:   #F4EFE3;
+      --surface-3:   #EFE8D8;
+      --border:      rgba(46,42,34,.10);
+      --border-2:    rgba(46,42,34,.18);
 
       /* Text */
-      --text-primary:   #f5f5f7;   /* Apple's signature near-white */
-      --text-secondary: #a1a1a6;   /* Apple mid-grey */
-      --text-tertiary:  #6e6e73;   /* Apple dim-grey */
+      --text-primary:   #2E2A22;   /* deep warm charcoal */
+      --text-secondary: #6B6455;   /* warm muted brown-grey */
+      --text-tertiary:  #948C7A;   /* soft warm grey */
 
       /* Accent tints (one per category) */
-      --green:   #30d158;   /* Apple green */
-      --brown:   #c49a53;   /* warm espresso gold */
-      --orange:  #ff9f0a;   /* Apple orange */
-      --blue:    #2997ff;   /* Apple blue */
-      --red:     #ff375f;   /* Apple red */
+      --green:   #2F5D3A;   /* Douglas fir green */
+      --brown:   #B06A3D;   /* terracotta */
+      --orange:  #D98E34;   /* amber */
+      --blue:    #4A6FA0;   /* slate blue */
+      --rose:    #B15A6B;   /* dusty rose */
 
       /* Radius & spacing */
       --r-card: 18px;
@@ -81,25 +81,6 @@
       overflow: hidden;
       background: var(--bg);
     }
-    /* Soft glow blobs — Apple uses these on product pages */
-    .hero::before, .hero::after {
-      content: '';
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      pointer-events: none;
-    }
-    .hero::before {
-      width: 420px; height: 420px;
-      background: radial-gradient(circle, rgba(48,209,88,.18) 0%, transparent 70%);
-      top: -80px; left: -100px;
-    }
-    .hero::after {
-      width: 360px; height: 360px;
-      background: radial-gradient(circle, rgba(41,151,255,.14) 0%, transparent 70%);
-      bottom: -60px; right: -80px;
-    }
-
     .hero-eyebrow {
       font-family: var(--font);
       font-size: 12px;
@@ -120,7 +101,7 @@
     }
     .hero h1 em {
       font-style: normal;
-      background: linear-gradient(135deg, #30d158 0%, #2997ff 100%);
+      background: linear-gradient(135deg, #2F5D3A 0%, #4A6FA0 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -151,7 +132,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(10,10,10,.82);
+      background: rgba(250,246,238,.85);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
       backdrop-filter: blur(20px) saturate(180%);
       border-bottom: 1px solid var(--border);
@@ -233,7 +214,7 @@
     .cat-hike   .card-accent { background: var(--green); }
     .cat-coffee .card-accent { background: var(--brown); }
     .cat-kenji  .card-accent { background: var(--orange); }
-    .cat-dinner .card-accent { background: var(--red); }
+    .cat-dinner .card-accent { background: var(--rose); }
     .cat-sight  .card-accent { background: var(--blue); }
 
     .card-body {
@@ -269,11 +250,11 @@
       margin-top: 2px;
       letter-spacing: .02em;
     }
-    .cat-hike   .card-badge { background: rgba(48,209,88,.15);  color: var(--green); }
-    .cat-coffee .card-badge { background: rgba(196,154,83,.15); color: var(--brown); }
-    .cat-kenji  .card-badge { background: rgba(255,159,10,.15); color: var(--orange); }
-    .cat-dinner .card-badge { background: rgba(255,55,95,.15);  color: var(--red); }
-    .cat-sight  .card-badge { background: rgba(41,151,255,.15); color: var(--blue); }
+    .cat-hike   .card-badge { background: rgba(47,93,58,.13);   color: var(--green); }
+    .cat-coffee .card-badge { background: rgba(176,106,61,.13); color: var(--brown); }
+    .cat-kenji  .card-badge { background: rgba(217,142,52,.15); color: var(--orange); }
+    .cat-dinner .card-badge { background: rgba(177,90,107,.14); color: var(--rose); }
+    .cat-sight  .card-badge { background: rgba(74,111,160,.14); color: var(--blue); }
 
     .card-location {
       font-size: 12px;
@@ -335,12 +316,12 @@
       color: var(--text-tertiary);
       letter-spacing: .01em;
     }
-    .tag.day-trip   { background: rgba(255,159,10,.12); color: var(--orange); }
-    .tag.ferry      { background: rgba(41,151,255,.12); color: var(--blue); }
-    .tag.bloom      { background: rgba(255,105,180,.12); color: #ff79b0; }
-    .tag.paid       { background: rgba(255,255,255,.07); color: var(--text-tertiary); }
+    .tag.day-trip   { background: rgba(217,142,52,.14); color: var(--orange); }
+    .tag.ferry      { background: rgba(74,111,160,.14); color: var(--blue); }
+    .tag.bloom      { background: rgba(194,112,143,.14); color: #9C5372; }
+    .tag.paid       { background: rgba(46,42,34,.06); color: var(--text-tertiary); }
 
-    /* Map button — Apple-blue pill */
+    /* Map button */
     .map-link {
       flex-shrink: 0;
       display: inline-flex;
@@ -350,7 +331,7 @@
       height: 34px;
       padding: 0 16px;
       border-radius: var(--r-btn);
-      background: rgba(41,151,255,.18);
+      background: rgba(74,111,160,.16);
       color: var(--blue);
       font-family: var(--font);
       font-size: 13px;
@@ -360,7 +341,7 @@
       transition: background .15s;
       letter-spacing: .01em;
     }
-    .map-link:active { background: rgba(41,151,255,.3); }
+    .map-link:active { background: rgba(74,111,160,.28); }
 
     /* ── COMBOS ── */
     .combos {
@@ -487,29 +468,29 @@
     .map-filter-btn[data-cat="hike"].active   { background: var(--green);  border-color: var(--green); }
     .map-filter-btn[data-cat="coffee"].active { background: var(--brown);  border-color: var(--brown); }
     .map-filter-btn[data-cat="kenji"].active  { background: var(--orange); border-color: var(--orange); }
-    .map-filter-btn[data-cat="dinner"].active { background: var(--red);    border-color: var(--red); }
+    .map-filter-btn[data-cat="dinner"].active { background: var(--rose);    border-color: var(--rose); }
     .map-filter-btn[data-cat="sight"].active  { background: var(--blue);   border-color: var(--blue); }
 
-    /* Leaflet popup override to match dark theme */
+    /* Leaflet popup override to match light theme */
     .leaflet-popup-content-wrapper {
       background: var(--surface-2) !important;
       border: 1px solid var(--border-2) !important;
       border-radius: 14px !important;
-      box-shadow: 0 8px 32px rgba(0,0,0,.6) !important;
+      box-shadow: 0 8px 24px rgba(46,42,34,.16) !important;
       color: var(--text-primary) !important;
       font-family: var(--font) !important;
       padding: 0 !important;
     }
     .leaflet-popup-tip { background: var(--surface-2) !important; }
     .leaflet-popup-content { margin: 0 !important; width: auto !important; }
-    .leaflet-container { background: #111 !important; }
+    .leaflet-container { background: var(--surface-3) !important; }
     .leaflet-control-zoom a {
       background: var(--surface-2) !important;
       color: var(--text-primary) !important;
       border-color: var(--border-2) !important;
     }
     .leaflet-control-attribution {
-      background: rgba(0,0,0,.5) !important;
+      background: rgba(250,246,238,.75) !important;
       color: var(--text-tertiary) !important;
     }
     .leaflet-control-attribution a { color: var(--text-tertiary) !important; }
@@ -530,7 +511,7 @@
     .pop-cat.hike   { color: var(--green); }
     .pop-cat.coffee { color: var(--brown); }
     .pop-cat.kenji  { color: var(--orange); }
-    .pop-cat.dinner { color: var(--red); }
+    .pop-cat.dinner { color: var(--rose); }
     .pop-cat.sight  { color: var(--blue); }
     .pop-name {
       font-size: 15px;
@@ -557,13 +538,13 @@
       height: 30px;
       padding: 0 12px;
       border-radius: var(--r-btn);
-      background: rgba(41,151,255,.18);
+      background: rgba(74,111,160,.16);
       color: var(--blue);
       font-size: 12px;
       font-weight: 600;
       text-decoration: none;
     }
-    .pop-link:active { background: rgba(41,151,255,.3); }
+    .pop-link:active { background: rgba(74,111,160,.28); }
   </style>
 </head>
 <body>
@@ -1225,7 +1206,7 @@ const PLACES = [
 ];
 
 // ── COLORS & ICONS ───────────────────────────────────────────────────────────
-const CAT_COLOR  = { hike:'#30d158', coffee:'#c49a53', kenji:'#ff9f0a', dinner:'#ff375f', sight:'#2997ff' };
+const CAT_COLOR  = { hike:'#2F5D3A', coffee:'#B06A3D', kenji:'#D98E34', dinner:'#B15A6B', sight:'#4A6FA0' };
 const CAT_EMOJI  = { hike:'🥾', coffee:'☕', kenji:'🍽️', dinner:'🍷', sight:'🌆' };
 const CAT_LABEL  = { hike:'Hike', coffee:'Coffee', kenji:'Kenji Pick', dinner:'Dinner', sight:'Sight' };
 
@@ -1236,7 +1217,7 @@ function makeIcon(cat) {
     <svg xmlns="http://www.w3.org/2000/svg" width="36" height="44" viewBox="0 0 36 44">
       <defs>
         <filter id="s" x="-30%" y="-20%" width="160%" height="160%">
-          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,.55)"/>
+          <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="rgba(46,42,34,.35)"/>
         </filter>
       </defs>
       <path d="M18 0C8.059 0 0 8.059 0 18c0 13.5 18 26 18 26S36 31.5 36 18C36 8.059 27.941 0 18 0z"
@@ -1261,8 +1242,8 @@ const map = L.map('map', {
   attributionControl: true,
 });
 
-// Dark tile layer — CartoDB Dark Matter
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+// Light tile layer — CartoDB Positron
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a>',
   subdomains: 'abcd',
   maxZoom: 19,
