@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#0a0a0a" />
-  <title>Teera's Seattle Weekend</title>
+  <title>Seattle Weekend Guide</title>
 
   <!--
     SF-inspired typography:
@@ -40,6 +40,7 @@
       --brown:   #c49a53;   /* warm espresso gold */
       --orange:  #ff9f0a;   /* Apple orange */
       --blue:    #2997ff;   /* Apple blue */
+      --red:     #ff375f;   /* Apple red */
 
       /* Radius & spacing */
       --r-card: 18px;
@@ -232,6 +233,7 @@
     .cat-hike   .card-accent { background: var(--green); }
     .cat-coffee .card-accent { background: var(--brown); }
     .cat-kenji  .card-accent { background: var(--orange); }
+    .cat-dinner .card-accent { background: var(--red); }
     .cat-sight  .card-accent { background: var(--blue); }
 
     .card-body {
@@ -270,6 +272,7 @@
     .cat-hike   .card-badge { background: rgba(48,209,88,.15);  color: var(--green); }
     .cat-coffee .card-badge { background: rgba(196,154,83,.15); color: var(--brown); }
     .cat-kenji  .card-badge { background: rgba(255,159,10,.15); color: var(--orange); }
+    .cat-dinner .card-badge { background: rgba(255,55,95,.15);  color: var(--red); }
     .cat-sight  .card-badge { background: rgba(41,151,255,.15); color: var(--blue); }
 
     .card-location {
@@ -332,7 +335,6 @@
       color: var(--text-tertiary);
       letter-spacing: .01em;
     }
-    .tag.march-safe { background: rgba(48,209,88,.12);  color: var(--green); }
     .tag.day-trip   { background: rgba(255,159,10,.12); color: var(--orange); }
     .tag.ferry      { background: rgba(41,151,255,.12); color: var(--blue); }
     .tag.bloom      { background: rgba(255,105,180,.12); color: #ff79b0; }
@@ -485,6 +487,7 @@
     .map-filter-btn[data-cat="hike"].active   { background: var(--green);  border-color: var(--green); }
     .map-filter-btn[data-cat="coffee"].active { background: var(--brown);  border-color: var(--brown); }
     .map-filter-btn[data-cat="kenji"].active  { background: var(--orange); border-color: var(--orange); }
+    .map-filter-btn[data-cat="dinner"].active { background: var(--red);    border-color: var(--red); }
     .map-filter-btn[data-cat="sight"].active  { background: var(--blue);   border-color: var(--blue); }
 
     /* Leaflet popup override to match dark theme */
@@ -527,6 +530,7 @@
     .pop-cat.hike   { color: var(--green); }
     .pop-cat.coffee { color: var(--brown); }
     .pop-cat.kenji  { color: var(--orange); }
+    .pop-cat.dinner { color: var(--red); }
     .pop-cat.sight  { color: var(--blue); }
     .pop-name {
       font-size: 15px;
@@ -567,9 +571,9 @@
 <!-- HERO -->
 <header class="hero">
   <p class="hero-eyebrow">A weekend guide · Seattle</p>
-  <h1>Hey Teera,<br><em>welcome</em> to Seattle</h1>
-  <p class="hero-sub">Hikes, coffee, sights, and some of Seattle's best food — curated for a late March long weekend while you have a few hours to yourself.</p>
-  <span class="weather-pill">☁️ Late March: pack layers, expect some rain, embrace it</span>
+  <h1><em>Welcome</em> to Seattle</h1>
+  <p class="hero-sub">Hikes, coffee, dinner spots, and some of Seattle's best food and sights — curated for whenever you've got a few hours to explore.</p>
+  <span class="weather-pill">☔️ Pacific Northwest weather: pack layers, expect some rain, embrace it</span>
 </header>
 
 <!-- STICKY FILTER BAR -->
@@ -579,6 +583,7 @@
     <button class="filter-btn" data-filter="hike">🥾 Hikes</button>
     <button class="filter-btn" data-filter="coffee">☕ Coffee</button>
     <button class="filter-btn" data-filter="kenji">🍽️ Kenji Picks</button>
+    <button class="filter-btn" data-filter="dinner">🍷 Dinner</button>
     <button class="filter-btn" data-filter="sight">🌆 Sights</button>
   </nav>
 </div>
@@ -597,7 +602,7 @@
       <p class="card-desc">Seattle's largest park — forest trails wind down to a historic lighthouse and a secluded pebble beach on Puget Sound. You'll forget you're in a city within five minutes. Multiple loops from 2 to 5 miles.</p>
     </div>
     <div class="card-footer">
-      <div class="card-tags"><span class="tag march-safe">✓ March-safe</span><span class="tag">In-city</span><span class="tag">Easy–Mod</span></div>
+      <div class="card-tags"><span class="tag">In-city</span><span class="tag">Easy–Mod</span></div>
       <a class="map-link" href="https://maps.apple.com/?q=Discovery+Park+Seattle" target="_blank">Maps ↗</a>
     </div>
   </article>
@@ -610,7 +615,7 @@
       <p class="card-desc">A West Seattle gem with 5 miles of forested trails opening onto views of the Olympics and Puget Sound. A long coastal trail runs right along the waterline. Free parking, no fees. Great on a clear day — or a moody rainy one.</p>
     </div>
     <div class="card-footer">
-      <div class="card-tags"><span class="tag march-safe">✓ March-safe</span><span class="tag">In-city</span><span class="tag">Easy–Mod</span></div>
+      <div class="card-tags"><span class="tag">In-city</span><span class="tag">Easy–Mod</span></div>
       <a class="map-link" href="https://maps.apple.com/?q=Lincoln+Park+West+Seattle" target="_blank">Maps ↗</a>
     </div>
   </article>
@@ -623,7 +628,7 @@
       <p class="card-desc">A peninsula of old-growth forest on Lake Washington — there's reportedly a 500-year-old tree in there. Easy 2.5-mile loop with constant lake views and Mt. Rainier on clear days. Peaceful, beautiful, and rarely crowded.</p>
     </div>
     <div class="card-footer">
-      <div class="card-tags"><span class="tag march-safe">✓ March-safe</span><span class="tag">In-city</span><span class="tag">Easy</span></div>
+      <div class="card-tags"><span class="tag">In-city</span><span class="tag">Easy</span></div>
       <a class="map-link" href="https://maps.apple.com/?q=Seward+Park+Seattle" target="_blank">Maps ↗</a>
     </div>
   </article>
@@ -636,7 +641,7 @@
       <p class="card-desc">A 230-acre living tree museum managed by the UW. Late March is special — early camellias and magnolias are blooming. Boardwalk paths, lily pad ponds, sequoia groves. Free and open daily 8am–8pm.</p>
     </div>
     <div class="card-footer">
-      <div class="card-tags"><span class="tag march-safe">✓ March-safe</span><span class="tag">In-city</span><span class="tag bloom">🌸 Blooms</span></div>
+      <div class="card-tags"><span class="tag">In-city</span><span class="tag bloom">🌸 Blooms</span></div>
       <a class="map-link" href="https://maps.apple.com/?q=Washington+Park+Arboretum+Seattle" target="_blank">Maps ↗</a>
     </div>
   </article>
@@ -649,7 +654,7 @@
       <p class="card-desc">Mossy forest, river views the whole way, and a gorgeous multi-tiered waterfall at the end. Easy and well-maintained. In late March the falls run strong from snowmelt — exactly when this hike is at its best.</p>
     </div>
     <div class="card-footer">
-      <div class="card-tags"><span class="tag march-safe">✓ March-safe</span><span class="tag day-trip">Day trip</span><span class="tag">Easy</span></div>
+      <div class="card-tags"><span class="tag day-trip">Day trip</span><span class="tag">Easy</span></div>
       <a class="map-link" href="https://maps.apple.com/?q=Twin+Falls+Trailhead+North+Bend+WA" target="_blank">Maps ↗</a>
     </div>
   </article>
@@ -662,7 +667,7 @@
       <p class="card-desc">One mile each way, minimal elevation gain, jaw-dropping waterfall at the end. Very family-friendly. <strong>Note:</strong> check trailhead access in March — use Exit 52 if Exit 47 is gated.</p>
     </div>
     <div class="card-footer">
-      <div class="card-tags"><span class="tag march-safe">✓ March-safe</span><span class="tag day-trip">Day trip</span><span class="tag">Easy</span></div>
+      <div class="card-tags"><span class="tag day-trip">Day trip</span><span class="tag">Easy</span></div>
       <a class="map-link" href="https://maps.apple.com/?q=Franklin+Falls+Trailhead+Snoqualmie+WA" target="_blank">Maps ↗</a>
     </div>
   </article>
@@ -675,7 +680,7 @@
       <p class="card-desc">Seattle's most popular day hike: a steady 4-mile round-trip through forest opens onto a dramatic rocky ledge with sweeping views of Rattlesnake Lake. Go on a weekday if you can — weekends fill up fast.</p>
     </div>
     <div class="card-footer">
-      <div class="card-tags"><span class="tag march-safe">✓ March-safe</span><span class="tag day-trip">Day trip</span><span class="tag">Moderate</span></div>
+      <div class="card-tags"><span class="tag day-trip">Day trip</span><span class="tag">Moderate</span></div>
       <a class="map-link" href="https://maps.apple.com/?q=Rattlesnake+Ledge+Trailhead+North+Bend+WA" target="_blank">Maps ↗</a>
     </div>
   </article>
@@ -688,7 +693,7 @@
       <p class="card-desc">Multiple waterfall viewpoints through lush PNW forest. Spring is peak season — the falls are thunderous from snowmelt. About 5.5 miles round-trip with some elevation gain.</p>
     </div>
     <div class="card-footer">
-      <div class="card-tags"><span class="tag march-safe">✓ March-safe</span><span class="tag day-trip">Day trip</span><span class="tag">Moderate</span></div>
+      <div class="card-tags"><span class="tag day-trip">Day trip</span><span class="tag">Moderate</span></div>
       <a class="map-link" href="https://maps.apple.com/?q=Wallace+Falls+State+Park+Gold+Bar+WA" target="_blank">Maps ↗</a>
     </div>
   </article>
@@ -900,6 +905,86 @@
     </div>
   </article>
 
+  <!-- ══════ DINNER ══════ -->
+
+  <article class="card cat-dinner" data-cat="dinner">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Matt's in the Market</h2><span class="card-badge">🍷 Dinner</span></div>
+      <p class="card-location">📍 Pike Place Market · 94 Pike St, Ste 32</p>
+      <p class="card-desc">Pacific Northwest seafood tucked upstairs in Pike Place Market, with views over the market floor.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Seafood</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Matt%27s+in+the+Market+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-dinner" data-cat="dinner">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">The Pink Door</h2><span class="card-badge">🍷 Dinner</span></div>
+      <p class="card-location">📍 Post Alley · 1919 Post Alley</p>
+      <p class="card-desc">Italian-American in Post Alley, as known for its theatrical atmosphere — live cabaret, trapeze — as its food.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Italian-American</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=The+Pink+Door+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-dinner" data-cat="dinner">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Nue</h2><span class="card-badge">🍷 Dinner</span></div>
+      <p class="card-location">📍 Capitol Hill · 1519 14th Ave</p>
+      <p class="card-desc">Globe-spanning street food; an eclectic, well-traveled menu on Capitol Hill.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Global street food</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Nue+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-dinner" data-cat="dinner">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Monsoon</h2><span class="card-badge">🍷 Dinner</span></div>
+      <p class="card-location">📍 Capitol Hill · 615 19th Ave E</p>
+      <p class="card-desc">Refined, modern Vietnamese on Capitol Hill.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Vietnamese</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Monsoon+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-dinner" data-cat="dinner">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">Red Cow</h2><span class="card-badge">🍷 Dinner</span></div>
+      <p class="card-location">📍 Madrona · 1423 34th Ave</p>
+      <p class="card-desc">Cozy French bistro in Madrona.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">French bistro</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=Red+Cow+Madrona+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
+  <article class="card cat-dinner" data-cat="dinner">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-top"><h2 class="card-title">The Harvest Vine</h2><span class="card-badge">🍷 Dinner</span></div>
+      <p class="card-location">📍 Madison Valley · 2701 E Madison St</p>
+      <p class="card-desc">Basque tapas in Madison Valley, much of it cooked right at the counter in front of you.</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-tags"><span class="tag">Basque tapas</span></div>
+      <a class="map-link" href="https://maps.apple.com/?q=The+Harvest+Vine+Seattle" target="_blank">Maps ↗</a>
+    </div>
+  </article>
+
   <!-- ══════ SIGHTS ══════ -->
 
   <article class="card cat-sight" data-cat="sight">
@@ -1011,10 +1096,10 @@
     <div class="card-body">
       <div class="card-top"><h2 class="card-title">UW Cherry Blossoms</h2><span class="card-badge">🌆 Sight</span></div>
       <p class="card-location">📍 UW Campus · The Quad, NE 40th St entrance</p>
-      <p class="card-desc">29 Yoshino cherry trees arch over the UW Quad in a pink canopy that draws thousands every spring. Peak bloom for 2026 was predicted around March 20 — meaning late March is right in the optimal viewing window. Free to visit. Crowds are real: go early morning on a weekday, or just after sunrise on a weekend. Take the Link light rail to avoid parking chaos. Check <strong>washington.edu/cherryblossoms</strong> for live bloom status and webcam before you go.</p>
+      <p class="card-desc">29 Yoshino cherry trees arch over the UW Quad in a pink canopy that draws thousands every spring. Peak bloom typically lands in late March, give or take a week depending on the year. Free to visit. Crowds are real: go early morning on a weekday, or just after sunrise on a weekend. Take the Link light rail to avoid parking chaos. Check <strong>washington.edu/cherryblossoms</strong> for live bloom status and webcam before you go.</p>
     </div>
     <div class="card-footer">
-      <div class="card-tags"><span class="tag bloom">🌸 Peak late March</span><span class="tag">Free</span><span class="tag">Link accessible</span></div>
+      <div class="card-tags"><span class="tag bloom">🌸 Late March bloom</span><span class="tag">Free</span><span class="tag">Link accessible</span></div>
       <a class="map-link" href="https://maps.apple.com/?q=UW+Quad+Cherry+Blossoms+Seattle" target="_blank">Maps ↗</a>
     </div>
   </article>
@@ -1036,6 +1121,7 @@
       <div class="combo"><span class="combo-arrow">→</span><span><strong>Capitol Hill Morning:</strong> Temple Pastries → Espresso Vivace or Ghost Note → Aviv for lunch.</span></div>
       <div class="combo"><span class="combo-arrow">→</span><span><strong>Ferry Adventure:</strong> Downtown ferry to Bainbridge Island (35 min, skyline views both ways) → lunch at Proper Fish → ferry back. A perfect half-day.</span></div>
       <div class="combo"><span class="combo-arrow">→</span><span><strong>Classic Downtown:</strong> Mr. West for breakfast → Pike Place Market + Gum Wall → Post Alley Pizza for lunch → Olympic Sculpture Park → Kerry Park for the view.</span></div>
+      <div class="combo"><span class="combo-arrow">→</span><span><strong>Post Alley Evening:</strong> Kerry Park at golden hour → wander Pike Place Market after the crowds thin → dinner at The Pink Door, steps away in Post Alley.</span></div>
     </div>
   </div>
 </section>
@@ -1050,20 +1136,21 @@
     <button class="map-filter-btn" data-cat="hike">🥾 Hikes</button>
     <button class="map-filter-btn" data-cat="coffee">☕ Coffee</button>
     <button class="map-filter-btn" data-cat="kenji">🍽️ Kenji</button>
+    <button class="map-filter-btn" data-cat="dinner">🍷 Dinner</button>
     <button class="map-filter-btn" data-cat="sight">🌆 Sights</button>
   </div>
   <div id="map"></div>
 </section>
 
 
-  Made for <strong>Teera's late March Seattle weekend</strong> &nbsp;·&nbsp; Food picks by <strong>J. Kenji López-Alt</strong> &nbsp;·&nbsp; All hikes confirmed March-safe
+  A <strong>Seattle weekend guide</strong> &nbsp;·&nbsp; Food picks by <strong>J. Kenji López-Alt</strong> &nbsp;·&nbsp; Hikes, coffee, dinner, and sights for any time of year
 </footer>
 
 <script>
   const cards   = document.querySelectorAll('.card');
   const btns    = document.querySelectorAll('.filter-btn');
   const countEl = document.getElementById('count');
-  const labels  = { all: 'recommendation', hike: 'hike', coffee: 'coffee shop', kenji: 'Kenji pick', sight: 'sight' };
+  const labels  = { all: 'recommendation', hike: 'hike', coffee: 'coffee shop', kenji: 'Kenji pick', dinner: 'dinner spot', sight: 'sight' };
 
   function updateCount(f) {
     const n = f === 'all' ? cards.length : document.querySelectorAll(`.card[data-cat="${f}"]`).length;
@@ -1117,6 +1204,14 @@ const PLACES = [
   { cat:'kenji', name:'Buckshot Honey',             loc:'Snoqualmie (40 min east)',        lat:47.5273, lng:-121.8237, desc:'"A perfect post-hike stop." Smoked brisket on rye, cheddar apple pie, braised collards.', maps:'https://maps.apple.com/?q=Buckshot+Honey+Snoqualmie+WA' },
   { cat:'kenji', name:'Proper Fish',                loc:'Bainbridge Island (ferry)',        lat:47.6252, lng:-122.5206, desc:'"The best fish and chips around. Worth the ferry ride." Golden batter, thick-cut fries, mushy peas.', maps:'https://maps.apple.com/?q=Proper+Fish+Bainbridge+Island+WA' },
 
+  // DINNER
+  { cat:'dinner', name:"Matt's in the Market",     loc:'Pike Place Market · 94 Pike St',  lat:47.6088864, lng:-122.3406065, desc:'Pacific Northwest seafood tucked upstairs in Pike Place Market, with views over the market floor.', maps:"https://maps.apple.com/?q=Matt%27s+in+the+Market+Seattle" },
+  { cat:'dinner', name:'The Pink Door',            loc:'Post Alley · 1919 Post Alley',    lat:47.6103408, lng:-122.3425869, desc:'Italian-American in Post Alley, known as much for its theatrical atmosphere — live cabaret, trapeze — as its food.', maps:'https://maps.apple.com/?q=The+Pink+Door+Seattle' },
+  { cat:'dinner', name:'Nue',                      loc:'Capitol Hill · 1519 14th Ave',    lat:47.614726,  lng:-122.314448,  desc:'Globe-spanning street food; an eclectic, well-traveled menu on Capitol Hill.', maps:'https://maps.apple.com/?q=Nue+Seattle' },
+  { cat:'dinner', name:'Monsoon',                  loc:'Capitol Hill · 615 19th Ave E',   lat:47.6248478, lng:-122.3076528, desc:'Refined, modern Vietnamese on Capitol Hill.', maps:'https://maps.apple.com/?q=Monsoon+Seattle' },
+  { cat:'dinner', name:'Red Cow',                  loc:'Madrona · 1423 34th Ave',         lat:47.6115,    lng:-122.2894,    desc:'Cozy French bistro in Madrona.', maps:'https://maps.apple.com/?q=Red+Cow+Madrona+Seattle' },
+  { cat:'dinner', name:'The Harvest Vine',         loc:'Madison Valley · 2701 E Madison', lat:47.6226102, lng:-122.2972375, desc:'Basque tapas in Madison Valley, much of it cooked right at the counter in front of you.', maps:'https://maps.apple.com/?q=The+Harvest+Vine+Seattle' },
+
   // SIGHTS
   { cat:'sight', name:'Pike Place Market',          loc:'Downtown Waterfront',             lat:47.6094, lng:-122.3420, desc:'Fish-throwing, flowers, and the Gum Wall. Best before 10am on a weekday. Post Alley Pizza is steps away.', maps:'https://maps.apple.com/?q=Pike+Place+Market+Seattle' },
   { cat:'sight', name:'The Gum Wall',               loc:'Post Alley (under Pike Place)',   lat:47.6084, lng:-122.3403, desc:'A brick alley plastered floor-to-ceiling in chewed gum. Delightfully weird. Open 24 hours.', maps:'https://maps.apple.com/?q=Gum+Wall+Post+Alley+Seattle' },
@@ -1130,9 +1225,9 @@ const PLACES = [
 ];
 
 // ── COLORS & ICONS ───────────────────────────────────────────────────────────
-const CAT_COLOR  = { hike:'#30d158', coffee:'#c49a53', kenji:'#ff9f0a', sight:'#2997ff' };
-const CAT_EMOJI  = { hike:'🥾', coffee:'☕', kenji:'🍽️', sight:'🌆' };
-const CAT_LABEL  = { hike:'Hike', coffee:'Coffee', kenji:'Kenji Pick', sight:'Sight' };
+const CAT_COLOR  = { hike:'#30d158', coffee:'#c49a53', kenji:'#ff9f0a', dinner:'#ff375f', sight:'#2997ff' };
+const CAT_EMOJI  = { hike:'🥾', coffee:'☕', kenji:'🍽️', dinner:'🍷', sight:'🌆' };
+const CAT_LABEL  = { hike:'Hike', coffee:'Coffee', kenji:'Kenji Pick', dinner:'Dinner', sight:'Sight' };
 
 function makeIcon(cat) {
   const color = CAT_COLOR[cat];
@@ -1174,7 +1269,7 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
 }).addTo(map);
 
 // ── BUILD MARKERS ─────────────────────────────────────────────────────────────
-const markersBycat = { hike:[], coffee:[], kenji:[], sight:[] };
+const markersBycat = { hike:[], coffee:[], kenji:[], dinner:[], sight:[] };
 
 PLACES.forEach(p => {
   const color = CAT_COLOR[p.cat];
